@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyLocation extends Model
 {
+    public $timestamps = false;
     protected $fillable = [
         'company_id',
         'address',

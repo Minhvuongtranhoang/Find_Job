@@ -4,12 +4,10 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Notification; // Import the Notification model
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use Notifiable;
 
     protected $fillable = [
         'email',
@@ -19,18 +17,27 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     public function jobSeeker()
     {
-        return $this->hasOne(JobSeeker::class, 'seeker_id');
+        return $this->hasOne(JobSeeker::class, 'seeker_id', 'user_id');
     }
 
     public function recruiter()
     {
-        return $this->hasOne(Recruiter::class, 'recruiter_id');
+        return $this->hasOne(Recruiter::class, 'recruiter_id', 'user_id');
+    }
+
+    public function passwordResets()
+    {
+        return $this->hasMany(PasswordReset::class);
     }
 
     public function notifications()
@@ -38,3 +45,4 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class);
     }
 }
+?>

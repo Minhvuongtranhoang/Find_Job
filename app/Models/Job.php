@@ -20,6 +20,13 @@ class Job extends Model
         'is_featured'
     ];
 
+    protected $casts = [
+        'deadline' => 'date',
+        'is_featured' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
+
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -27,21 +34,21 @@ class Job extends Model
 
     public function location()
     {
-        return $this->belongsTo(CompanyLocation::class);
+        return $this->belongsTo(CompanyLocation::class, 'location_id');
+    }
+
+    public function savedJobs()
+    {
+        return $this->hasMany(SavedJob::class);
+    }
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class);
     }
 
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'job_categories');
-    }
-
-    public function applications()
-    {
-        return $this->hasMany(JobApplication::class);
-    }
-
-    public function savedBy()
-    {
-        return $this->hasMany(SavedJob::class);
     }
 }

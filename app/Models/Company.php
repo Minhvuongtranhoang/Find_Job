@@ -17,6 +17,11 @@ class Company extends Model
         'employee_count'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
+
     public function locations()
     {
         return $this->hasMany(CompanyLocation::class);

@@ -11,6 +11,10 @@ class SavedJob extends Model
         'seeker_id'
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime'
+    ];
+
     public function job()
     {
         return $this->belongsTo(Job::class);

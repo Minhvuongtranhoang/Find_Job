@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class JobSeeker extends Model
 {
     protected $primaryKey = 'seeker_id';
+    public $timestamps = false;
 
     protected $fillable = [
         'full_name',
@@ -15,7 +16,7 @@ class JobSeeker extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'seeker_id');
+        return $this->belongsTo(User::class, 'seeker_id', 'user_id');
     }
 
     public function savedJobs()
@@ -28,3 +29,4 @@ class JobSeeker extends Model
         return $this->hasMany(JobApplication::class, 'seeker_id');
     }
 }
+?>

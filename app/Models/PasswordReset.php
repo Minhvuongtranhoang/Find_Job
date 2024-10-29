@@ -12,6 +12,10 @@ class PasswordReset extends Model
         'expires_at'
     ];
 
+    protected $casts = [
+        'expires_at' => 'datetime',
+        'created_at' => 'datetime'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
