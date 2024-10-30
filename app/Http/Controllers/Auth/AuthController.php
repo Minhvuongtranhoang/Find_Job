@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Routing\Controller;
 use App\Models\User;
 use App\Models\JobSeeker;
-use App\Models\Recruiter;
 use App\Models\Company;
+use App\Models\CompanyLocation;
+use App\Models\Recruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -23,136 +23,107 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+          $user = Auth::user();
+          $token = $user->createToken('auth_token')->plainTextToken;
+
+          return response()->json([
+              'status' => 'success',
+              'user' => $user,
+              'token' => $token
+          ]);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid credentials'
+        ], 401);
     }
 
     public function registerJobSeeker(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
-            'phone' => 'required',
-            'full_name' => 'required'
+            'phone' => 'required|string|max:20',
+            'full_name' => 'required|string|max:255',
+            'password' => ['required', Password::defaults()],
         ]);
 
-        // Bắt đầu transaction để đảm bảo tính nhất quán của dữ liệu
-        DB::beginTransaction();
+        $user = User::create([
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'job_seeker'
+        ]);
 
-        try {
-            // Tạo user mới
-            $user = User::create([
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'phone' => $request->phone,
-                'role' => 'job_seeker'
-            ]);
+        JobSeeker::create([
+            'user_id' => $user->id,
+            'full_name' => $validated['full_name']
+        ]);
 
-            // Log thông tin user
-            Log::info('New user registered', ['user_id' => $user->id, 'email' => $user->email]);
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-            // Tạo job seeker profile
-            $jobSeeker = new JobSeeker();
-            $jobSeeker->seeker_id = $user->id; // Gán ID của user làm seeker_id
-            $jobSeeker->full_name = $request->full_name;
-            $jobSeeker->save();
-
-            // Log thông tin job seeker
-            Log::info('New job seeker registered', [
-                'seeker_id' => $jobSeeker->seeker_id,
-                'full_name' => $jobSeeker->full_name
-            ]);
-
-            // Nếu mọi thứ OK, commit transaction
-            DB::commit();
-
-            // Login user
-            Auth::login($user);
-
-            return redirect('/dashboard')->with('success', 'Đăng ký thành công!');
-
-        } catch (\Exception $e) {
-            // Nếu có lỗi, rollback transaction
-            DB::rollBack();
-
-            Log::error('Registration failed', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return back()
-                ->withInput()
-                ->withErrors(['error' => 'Đăng ký thất bại. Vui lòng thử lại.']);
-        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Registration successful',
+            'user' => $user,
+            'token' => $token
+        ]);
     }
 
     public function registerRecruiter(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
-            'phone' => 'required',
-            'company_name' => 'required',
-            'location' => 'required'
+            'password' => ['required', Password::defaults()],
+            'phone' => 'required|string|max:20',
+            'company_name' => 'required|string|max:255',
+            'company_address' => 'required|string',
+            'google_maps_link' => 'nullable|string|max:255'
         ]);
 
+        // Create company
+        $company = Company::create([
+            'name' => $validated['company_name']
+        ]);
+
+        // Create company location
+        $location = CompanyLocation::create([
+            'company_id' => $company->id,
+            'address' => $validated['company_address'],
+            'google_maps_link' => $validated['google_maps_link']
+        ]);
+
+        // Create user
         $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone,
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'password' => Hash::make($validated['password']),
             'role' => 'recruiter'
         ]);
 
-        $company = Company::create([
-            'company_name' => $request->company_name
-        ]);
-
-        $company->locations()->create([
-            'address' => $request->location
-        ]);
-
+        // Create recruiter
         Recruiter::create([
-            'recruiter_id' => $user->id,
+            'user_id' => $user->id,
             'company_id' => $company->id
         ]);
 
-        Auth::login($user);
-        return redirect('/dashboard');
-    }
+        $token = $user->createToken('auth_token')->plainTextToken;
 
-    public function forgotPassword(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users'
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Registration successful',
+            'user' => $user,
+            'token' => $token
         ]);
-
-        // Generate password reset token and send email
-        // Implementation here...
     }
 
-    public function resetPassword(Request $request)
+    public function logout(Request $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'password' => 'required|min:8|confirmed'
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logged out successfully'
         ]);
-
-        // Reset password implementation
-        // Implementation here...
-    }
-
-    public function showJobSeekerRegistrationForm()
-    {
-        return view('auth.register.job-seeker');
-    }
-
-    public function showRecruiterRegistrationForm()
-    {
-        return view('auth.register.recruiter');
     }
 }
