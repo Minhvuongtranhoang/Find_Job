@@ -8,11 +8,11 @@ class Job extends Model
 {
     protected $fillable = [
         'company_id',
+        'location_id',
         'title',
         'description',
         'requirements',
         'benefits',
-        'location_id',
         'working_hours',
         'salary',
         'deadline',
@@ -22,9 +22,7 @@ class Job extends Model
 
     protected $casts = [
         'deadline' => 'date',
-        'is_featured' => 'boolean',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'is_featured' => 'boolean'
     ];
 
     public function company()
@@ -37,6 +35,11 @@ class Job extends Model
         return $this->belongsTo(CompanyLocation::class, 'location_id');
     }
 
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'job_categories');
+    }
+
     public function savedJobs()
     {
         return $this->hasMany(SavedJob::class);
@@ -45,10 +48,5 @@ class Job extends Model
     public function jobApplications()
     {
         return $this->hasMany(JobApplication::class);
-    }
-
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'job_categories');
     }
 }

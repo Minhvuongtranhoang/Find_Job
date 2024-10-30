@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyLocation extends Model
 {
-    public $timestamps = false;
     protected $fillable = [
         'company_id',
         'address',
@@ -23,3 +22,4 @@ class CompanyLocation extends Model
         return $this->hasMany(Job::class, 'location_id');
     }
 }
+

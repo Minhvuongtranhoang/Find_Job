@@ -10,6 +10,8 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -39,20 +41,54 @@ class AuthController extends Controller
             'full_name' => 'required'
         ]);
 
-        $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone,
-            'role' => 'job_seeker'
-        ]);
+        // Bắt đầu transaction để đảm bảo tính nhất quán của dữ liệu
+        DB::beginTransaction();
 
-        JobSeeker::create([
-            'seeker_id' => $user->id,
-            'full_name' => $request->full_name
-        ]);
+        try {
+            // Tạo user mới
+            $user = User::create([
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                'role' => 'job_seeker'
+            ]);
 
-        Auth::login($user);
-        return redirect('/dashboard');
+            // Log thông tin user
+            Log::info('New user registered', ['user_id' => $user->id, 'email' => $user->email]);
+
+            // Tạo job seeker profile
+            $jobSeeker = new JobSeeker();
+            $jobSeeker->seeker_id = $user->id; // Gán ID của user làm seeker_id
+            $jobSeeker->full_name = $request->full_name;
+            $jobSeeker->save();
+
+            // Log thông tin job seeker
+            Log::info('New job seeker registered', [
+                'seeker_id' => $jobSeeker->seeker_id,
+                'full_name' => $jobSeeker->full_name
+            ]);
+
+            // Nếu mọi thứ OK, commit transaction
+            DB::commit();
+
+            // Login user
+            Auth::login($user);
+
+            return redirect('/dashboard')->with('success', 'Đăng ký thành công!');
+
+        } catch (\Exception $e) {
+            // Nếu có lỗi, rollback transaction
+            DB::rollBack();
+
+            Log::error('Registration failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Đăng ký thất bại. Vui lòng thử lại.']);
+        }
     }
 
     public function registerRecruiter(Request $request)
@@ -108,5 +144,15 @@ class AuthController extends Controller
 
         // Reset password implementation
         // Implementation here...
+    }
+
+    public function showJobSeekerRegistrationForm()
+    {
+        return view('auth.register.job-seeker');
+    }
+
+    public function showRecruiterRegistrationForm()
+    {
+        return view('auth.register.recruiter');
     }
 }
