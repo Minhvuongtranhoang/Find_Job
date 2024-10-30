@@ -1,30 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
 
-// Route::get('/', function () {
-//   return view('employer.dashboard');
-// });
+Route::get('/auth/register/job-seeker', [AuthController::class, 'showJobSeekerRegistrationForm'])->name('register.job-seeker_form');
+Route::post('/register/job-seeker', [AuthController::class, 'registerJobSeeker'])->name('register.job-seeker');
 
-// Route::get('/', function () {
-//   return view('auth.register');
-// });
-Route::get('/', function () {
-  return view('employer.dashboard');
-});
-
-Route::get('employer.job-posts', function () {
-  return view('employer.job-posts');
-});
-Route::get('general.general', function () {
-  return view('general.general');
-});
-Route::get('employer.candidates', function () {
-    return view('employer.candidates');
-});
-Route::get('employer.profile', function () {
-    return view('employer.profile');
-});
-Route::get('employer.manage-jobs', function () {
-    return view('employer.manage-jobs');
-});
+Route::get('/register/recruiter', [AuthController::class, 'showRecruiterRegistrationForm'])->name('register.recruiter_form');
+Route::post('/register/recruiter', [AuthController::class, 'registerRecruiter'])->name('register.recruiter');
