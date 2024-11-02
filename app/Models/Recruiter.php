@@ -6,15 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Recruiter extends Model
 {
-    protected $primaryKey = 'recruiter_id';
-    public $timestamps = false;
     protected $fillable = [
+        'user_id',
         'company_id'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'recruiter_id', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function company()

@@ -10,10 +10,6 @@ class Category extends Model
         'name'
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime'
-    ];
-
     public function jobs()
     {
         return $this->belongsToMany(Job::class, 'job_categories');

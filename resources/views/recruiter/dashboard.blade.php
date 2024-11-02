@@ -1,5 +1,5 @@
 
-@extends('layouts.employer')
+{{-- @extends('layouts.employer') --}}
     @section('content')
             <!-- Main Content -->
             <div class="col-lg-10 content">

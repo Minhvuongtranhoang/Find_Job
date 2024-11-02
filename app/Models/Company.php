@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model
 {
     protected $fillable = [
-        'company_name',
+        'name',
         'logo',
         'website',
         'email',
@@ -15,11 +15,6 @@ class Company extends Model
         'description',
         'industry',
         'employee_count'
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
     ];
 
     public function locations()

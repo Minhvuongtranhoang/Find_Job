@@ -8,11 +8,7 @@ class SavedJob extends Model
 {
     protected $fillable = [
         'job_id',
-        'seeker_id'
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime'
+        'user_id'
     ];
 
     public function job()
@@ -20,8 +16,8 @@ class SavedJob extends Model
         return $this->belongsTo(Job::class);
     }
 
-    public function jobSeeker()
+    public function user()
     {
-        return $this->belongsTo(JobSeeker::class, 'seeker_id');
+        return $this->belongsTo(User::class);
     }
 }
