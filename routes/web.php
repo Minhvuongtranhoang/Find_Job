@@ -46,3 +46,7 @@ Route::get('/job-seeker/dashboard', function () {
 Route::get('/recruiter/dashboard', function () {
     return view('recruiter.dashboard');
 })->name('recruiter.dashboard');
+
+Route::get('/', function () {
+  return view('job_seeker.home');
+})->name('home');
