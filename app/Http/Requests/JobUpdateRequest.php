@@ -14,21 +14,17 @@ class JobUpdateRequest extends FormRequest
   {
     return true;
   }
-
-  /**
-   * Get the validation rules that apply to the request.
-   *
-   * @return array
-   */
   public function rules()
   {
     return [
       'title' => 'required|string|max:255',
+      'location_id' => 'required|exists:company_locations,id',
+      'deadline' => 'required|date',
       'description' => 'required|string',
-      'location' => 'required|string|max:255',
-      'salary' => 'nullable|numeric',
-      'company' => 'required|string|max:255',
-      'type' => 'required|string|in:full-time,part-time,contract',
+      'requirements' => 'required|string',
+      'benefits' => 'required|string',
+      'working_hours' => 'required|string',
+      'salary' => 'required|string',
     ];
   }
 }
