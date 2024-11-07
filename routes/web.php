@@ -5,6 +5,7 @@ use App\Http\Controllers\Recruiter\JobController;
 use App\Http\Controllers\Recruiter\CompanyController;
 use App\Http\Controllers\Recruiter\ApplicationController;
 use App\Http\Controllers\Recruiter\DashboardController;
+use App\Http\Controllers\Admin\UserController;
 
 
 // Login routes
@@ -58,4 +59,21 @@ Route::middleware('auth')->group(function () {
   Route::get('/recruiter/applications/{application}', [ApplicationController::class, 'show'])->name('recruiter.applications.show');
   Route::put('/recruiter/applications/{application}/status', [ApplicationController::class, 'updateStatus'])->name('recruiter.applications.update-status');
   Route::get('/recruiter/applications/{application}/download-cv', [ApplicationController::class, 'downloadCV'])->name('recruiter.applications.download-cv');
+});
+
+
+// admin routes
+Route::middleware('auth')->group(function () {
+  Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+  Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
+  Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
+  Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+  Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+  Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+  Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+  Route::get('/admin/jobs/pending', [JobController::class, 'pending'])->name('admin.jobs.pending');
+  Route::put('/admin/jobs/{job}/approve', [JobController::class, 'approved'])->name('admin.jobs.approve');
+  Route::put('/admin/jobs/{job}/reject', [JobController::class, 'rejected'])->name('admin.jobs.reject');
+  Route::put('/admin/jobs/{job}/toggle-featured', [JobController::class, 'toggleFeatured'])->name('admin.jobs.toggle-featured');
+  Route::delete('/admin/jobs/{job}', [JobController::class, 'destroy'])->name('admin.jobs.destroy');
 });
