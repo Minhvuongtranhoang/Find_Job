@@ -96,23 +96,25 @@
 
 @push('scripts')
 <script>
-    document.getElementById('add-location').addEventListener('click', function() {
-        const container = document.getElementById('locations-container');
-        const index = container.children.length;
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('add-location').addEventListener('click', function() {
+            const container = document.getElementById('locations-container');
+            const index = container.children.length;
 
-        const template = `
-            <div class="location-item mb-3 p-3 border rounded">
-                <div class="mb-2">
-                    <label class="form-label">Address</label>
-                    <input type="text" name="locations[${index}][address]" class="form-control">
+            const template = `
+                <div class="location-item mb-3 p-3 border rounded">
+                    <div class="mb-2">
+                        <label class="form-label">Address</label>
+                        <input type="text" name="locations[${index}][address]" class="form-control">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Google Maps Link</label>
+                        <input type="url" name="locations[${index}][google_maps_link]" class="form-control">
+                    </div>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">Google Maps Link</label>
-                    <input type="url" name="locations[${index}][google_maps_link]" class="form-control">
-                </div>
-            </div>
-        `;
-        container.insertAdjacentHTML('beforeend', template);
+            `;
+            container.insertAdjacentHTML('beforeend', template);
+        });
     });
 </script>
 @endpush
