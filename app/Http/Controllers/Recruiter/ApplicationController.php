@@ -74,7 +74,40 @@ class ApplicationController extends Controller
 
     public function downloadCV(JobApplication $application)
     {
-        $this->authorize('view', $application);
-        return Storage::download($application->cv_file);
+      $this->authorize('view', $application);
+
+      if (Storage::disk('public')->exists($application->cv_file)) {
+          return response()->download(storage_path('app/public/' . $application->cv_file));
+      }
+
+      return redirect()->back()->withErrors('CV file not found.');
+  }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'cv_file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            // other validation rules
+        ]);
+
+        $cvFilePath = $request->file('cv_file')->store('cvs','public');
+
+        JobApplication::create([
+            'job_id' => $request->job_id,
+            'user_id' => Auth::id(),
+            'cv_file' => $cvFilePath,
+            // other fields
+        ]);
+
+        return redirect()->route('recruiter.applications.index')->with('success', 'Application submitted successfully.');
+    }
+
+    public function destroy(JobApplication $application)
+    {
+        $this->authorize('delete', $application);
+
+        $application->delete();
+
+        return redirect()->route('recruiter.applications.index')->with('success', 'Application deleted successfully.');
     }
 }

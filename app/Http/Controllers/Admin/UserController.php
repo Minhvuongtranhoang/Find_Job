@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Job;
-use App\Models\User;
-use App\Models\JobSeeker;
-use App\Models\Recruiter;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['jobSeeker', 'recruiter.company'])->paginate(10);
+        $users = User::all();
         return view('admin.users.index', compact('users'));
     }
 
@@ -25,70 +21,43 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-      $request->validate([
-        'full_name' => 'required_if:role,job_seeker',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-        'role' => 'required|in:job_seeker,recruiter',
-        'phone' => 'nullable|string',
-        'company_id' => 'required_if:role,recruiter'
-      ]);
-
-      $user = User::create([
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'phone' => $request->phone,
-        'role' => $request->role
-      ]);
-
-      if($request->role === 'job_seeker') {
-        JobSeeker::create([
-          'user_id' => $user->id,
-          'full_name' => $request->full_name
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string',
         ]);
-      } else {
-        Recruiter::create([
-          'user_id' => $user->id,
-          'company_id' => $request->company_id
-        ]);
-      }
-      return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+
+        User::create($request->all());
+
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
-    public function edit(User $user)
+    public function edit($id)
     {
+        $user = User::findOrFail($id);
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-      $request->validate([
-        'email' => 'required|email|unique:users,email,'.$user->id,
-        'phone' => 'nullable|string',
-        'company_id' => 'required_if:role,recruiter',
-        'full_name' => 'required_if:role,job_seeker'
-      ]);
-
-      $user->update([
-        'email' => $request->email,
-        'phone' => $request->phone
-      ]);
-
-      if ($user->role === 'job_seeker' && $user->jobSeeker) {
-        $user->jobSeeker->update([
-          'full_name' => $request->full_name
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'role' => 'required|string',
         ]);
-      } elseif ($user->role === 'recruiter' && $user->recruiter) {
-        $user->recruiter->update([
-          'company_id' => $request->company_id
-        ]);
-      }
-      return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
 
-    public function destroy(User $user)
+    public function destroy($id)
     {
+        $user = User::findOrFail($id);
         $user->delete();
+
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 }

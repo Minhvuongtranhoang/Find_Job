@@ -1,83 +1,92 @@
 @extends('layouts.recruiter')
 
 @section('content')
-<div class="container mx-auto px-0 py-8">
-    <h1 class="text-2xl font-bold mb-6">Job Applications</h1>
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
+  <div class="row">
+    <div class="col-12 col-xxl-8 mb-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex align-items-center justify-content-between">
+            <h5 class="card-title mb-0">Job Applications</h5>
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" class="form-control" placeholder="Search...">
+            </div>
+          </div>
         </div>
-    @endif
+       {{-- show Notification --}}
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    <div class="bg-white">
-        <table class="w-full border-collapse">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Applicant
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Job Position
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Applied Date
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                    </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                    </th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @foreach($applications as $application)
+        <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover table-nowrap">
+                <thead>
                     <tr>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                @if($application->user->jobSeeker->avatar)
-                                    <img class="h-10 w-10 rounded-full"
-                                         src="{{ Storage::url($application->user->jobSeeker->avatar) }}"
-                                         alt="">
-                                @endif
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900">
+                        <th>Applicant</th>
+                        <th>Job Position</th>
+                        <th>Applied Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($applications as $application)
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    @if($application->user->jobSeeker->avatar)
+                                      <img src="{{ Storage::url($application->user->jobSeeker->avatar)}}" class="rounded-circle me-2" style="height: 40px" width="40px" alt="Avatar">
+                                    @endif
+                                    <div>
+                                      <h6 class="mb-0">
                                         {{ $application->user->jobSeeker->full_name }}
-                                    </div>
-                                    <div class="text-sm text-gray-500">
+                                      </h6>
+                                      <small class="text-muted">
                                         {{ $application->user->email }}
+                                      </small>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-900">{{ $application->job->title }}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="text-sm text-gray-500">
-                                {{ $application->created_at->format('M d, Y') }}
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                {{ $application->status === 'approved' ? 'bg-green-100 text-green-800' :
-                                   ($application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                   'bg-red-100 text-red-800') }}">
+                            </td>
+                            <td>{{ $application->job->title }}</td>
+                            <td>{{ $application->created_at->format('M d, Y') }}</td>
+                            <td>
+                              <span
+                                    @class([
+                                        'status-badge status-approved' => $application->status === 'approved',
+                                        'status-badge status-rejected' => $application->status === 'rejected',
+                                        'status-badge status-pending' => $application->status === 'pending',
+                                    ])>
                                 {{ ucfirst($application->status) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-sm font-medium">
-                            <a href="{{ route('recruiter.applications.show', $application) }}"
-                               class="text-indigo-600 hover:text-indigo-900">View Details</a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="px-6 py-4">
-            {{ $applications->links() }}
+                              </span>
+                            </td>
+
+                            <td>
+                              <div class="btn-group">
+                                <a href="{{ route('recruiter.applications.show', $application->id) }}" class="btn btn-light btn-sm" title="View"><i class="fas fa-eye"></i></a>
+                                <a href="{{ route('recruiter.applications.download-cv', $application->id) }}" class="btn btn-light btn-sm" title="Download CV"><i class="fas fa-download"></i></a>
+                                <a href="{{ route('recruiter.applications.destroy', $application->id) }}" class="btn btn-light btn-sm" title="Destroy"><i class="fas fa-trash"></i></a>
+                              </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+              </table>
+
+              <div class="d-flex flex-column align-items-center" style="margin-top: 30px">
+                <div>
+                  {{ $applications->links('pagination::bootstrap-4') }}
+                </div>
+                <div class="text-muted mt-2">
+                Showing {{ $applications->firstItem() }} to {{ $applications->lastItem() }} of {{ $applications->total() }} results
+                </div>
+              </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 @endsection

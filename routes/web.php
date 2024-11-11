@@ -1,12 +1,15 @@
 <?php
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminJobController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Recruiter\JobController;
 use App\Http\Controllers\Recruiter\CompanyController;
 use App\Http\Controllers\Recruiter\ApplicationController;
 use App\Http\Controllers\Recruiter\DashboardController;
 use App\Http\Controllers\Admin\UserController;
-
+use App\Http\Controllers\Recruiter\JobController;
+use App\Http\Controllers\Admin\CategoryController;
 
 // Login routes
 Route::get('/auth/login', function () {return view('auth.login');})->name('login');
@@ -59,21 +62,26 @@ Route::middleware('auth')->group(function () {
   Route::get('/recruiter/applications/{application}', [ApplicationController::class, 'show'])->name('recruiter.applications.show');
   Route::put('/recruiter/applications/{application}/status', [ApplicationController::class, 'updateStatus'])->name('recruiter.applications.update-status');
   Route::get('/recruiter/applications/{application}/download-cv', [ApplicationController::class, 'downloadCV'])->name('recruiter.applications.download-cv');
+  //destroy application
+  Route::delete('/recruiter/applications/{application}', [ApplicationController::class, 'destroy'])->name('recruiter.applications.destroy');
 });
 
+// Admin routes
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+  Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-// admin routes
-Route::middleware('auth')->group(function () {
-  Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-  Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users.index');
-  Route::get('/admin/users/create', [UserController::class, 'create'])->name('admin.users.create');
-  Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
-  Route::get('/admin/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
-  Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
-  Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
-  Route::get('/admin/jobs/pending', [JobController::class, 'pending'])->name('admin.jobs.pending');
-  Route::put('/admin/jobs/{job}/approve', [JobController::class, 'approved'])->name('admin.jobs.approve');
-  Route::put('/admin/jobs/{job}/reject', [JobController::class, 'rejected'])->name('admin.jobs.reject');
-  Route::put('/admin/jobs/{job}/toggle-featured', [JobController::class, 'toggleFeatured'])->name('admin.jobs.toggle-featured');
-  Route::delete('/admin/jobs/{job}', [JobController::class, 'destroy'])->name('admin.jobs.destroy');
+  // User management routes
+  Route::resource('users', UserController::class);
+
+  // Job management routes
+  Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
+  Route::get('/jobs/pending', [AdminJobController::class, 'pending'])->name('jobs.pending');
+  Route::get('/jobs/approved', [AdminJobController::class, 'approved'])->name('jobs.approved');
+  Route::post('/jobs/{id}/approve', [AdminJobController::class, 'approve'])->name('jobs.approve');
+  Route::post('/jobs/{id}/reject', [AdminJobController::class, 'reject'])->name('jobs.reject');
+  Route::delete('/jobs/{id}', [AdminJobController::class, 'destroy'])->name('jobs.destroy');
+  Route::post('/jobs/{job}/toggle-featured', [AdminJobController::class, 'toggleFeatured'])->name('jobs.toggle-featured');
+
+  // Category management routes
+  Route::resource('categories', CategoryController::class);
 });

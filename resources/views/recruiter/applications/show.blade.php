@@ -1,109 +1,106 @@
 @extends('layouts.recruiter')
 
 @section('content')
-<div class="container mx-auto px-0 py-8">
-    <div class="bg-white rounded-lg shadow-lg p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Application Details</h1>
-            <div>
-                <a href="{{ route('recruiter.applications.download-cv', $application) }}"
-                   class="bg-blue-500 text-white px-4 py-2 rounded mr-2">
+<div class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3">Application Details</h1>
+                <a href="{{ route('recruiter.applications.download-cv', $application) }}" class="btn btn-primary">
                     Download CV
                 </a>
             </div>
-        </div>
 
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Applicant Information</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-gray-600">Name</p>
-                    <p class="font-medium">{{ $application->user->jobSeeker->full_name }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-600">Email</p>
-                    <p class="font-medium">{{ $application->user->email }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Job Information</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-gray-600">Position</p>
-                    <p class="font-medium">{{ $application->job->title }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-600">Applied Date</p>
-                    <p class="font-medium">{{ $application->created_at->format('M d, Y') }}</p>
+            <div class="mb-4">
+                <h2 class="h5">Applicant Information</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">Name</p>
+                        <p class="fw-bold">{{ $application->user->jobSeeker->full_name }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">Email</p>
+                        <p class="fw-bold">{{ $application->user->email }}</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        @if($application->cover_letter)
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold mb-4">Cover Letter</h2>
-                <div class="bg-gray-50 p-4 rounded">
-                    {{ $application->cover_letter }}
+            <div class="mb-4">
+                <h2 class="h5">Job Information</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">Position</p>
+                        <p class="fw-bold">{{ $application->job->title }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-muted mb-1">Applied Date</p>
+                        <p class="fw-bold">{{ $application->created_at->format('M d, Y') }}</p>
+                    </div>
                 </div>
             </div>
-        @endif
 
-        <div class="mb-6">
-            <h2 class="text-xl font-semibold mb-4">Application Status</h2>
-            <form action="{{ route('recruiter.applications.update-status', $application) }}" method="POST">
-                @csrf
-                @method('PUT')
-
+            @if($application->cover_letter)
                 <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Update Status</label>
-                    <select name="status" class="form-select w-full">
-                        <option value="pending" {{ $application->status === 'pending' ? 'selected' : '' }}>
-                            Pending Review
-                        </option>
-                        <option value="approved" {{ $application->status === 'approved' ? 'selected' : '' }}>
-                            Approve
-                        </option>
-                        <option value="rejected" {{ $application->status === 'rejected' ? 'selected' : '' }}>
-                            Reject
-                        </option>
-                    </select>
+                    <h2 class="h5">Cover Letter</h2>
+                    <div class="bg-light p-3 rounded">
+                        {{ $application->cover_letter }}
+                    </div>
                 </div>
+            @endif
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">Note</label>
-                    <textarea name="note" rows="3" class="form-textarea w-full"></textarea>
-                </div>
+            <div class="mb-4">
+                <h2 class="h5">Application Status</h2>
+                <form action="{{ route('recruiter.applications.update-status', $application) }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-                <div class="flex justify-end">
-                    <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded">
-                        Update Status
-                    </button>
-                </div>
-            </form>
-        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Update Status</label>
+                        <select name="status" class="form-select">
+                            <option value="pending" {{ $application->status === 'pending' ? 'selected' : '' }}>
+                                Pending Review
+                            </option>
+                            <option value="approved" {{ $application->status === 'approved' ? 'selected' : '' }}>
+                                Approve
+                            </option>
+                            <option value="rejected" {{ $application->status === 'rejected' ? 'selected' : '' }}>
+                                Reject
+                            </option>
+                        </select>
+                    </div>
 
-        @if($application->statusHistory->count() > 0)
-            <div>
-                <h2 class="text-xl font-semibold mb-4">Status History</h2>
-                <div class="space-y-4">
-                    @foreach($application->statusHistory as $history)
-                        <div class="bg-gray-50 p-4 rounded">
-                            <div class="flex justify-between items-center">
-                                <span class="font-medium">{{ ucfirst($history->status) }}</span>
-                                <span class="text-sm text-gray-500">
-                                    {{ $history->created_at->format('M d, Y H:i') }}
-                                </span>
+                    <div class="mb-3">
+                        <label class="form-label">Note</label>
+                        <textarea name="note" rows="3" class="form-control"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-success">
+                            Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            @if($application->statusHistory->count() > 0)
+                <div>
+                    <h2 class="h5">Status History</h2>
+                    <div class="list-group">
+                        @foreach($application->statusHistory as $history)
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">{{ ucfirst($history->status) }}</span>
+                                    <span class="text-muted">{{ $history->created_at->format('M d, Y H:i') }}</span>
+                                </div>
+                                @if($history->note)
+                                    <p class="mb-0">{{ $history->note }}</p>
+                                @endif
                             </div>
-                            @if($history->note)
-                                <p class="text-gray-600 mt-2">{{ $history->note }}</p>
-                            @endif
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 </div>
 @endsection
