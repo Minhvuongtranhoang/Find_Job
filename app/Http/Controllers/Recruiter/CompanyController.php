@@ -25,7 +25,7 @@ class CompanyController extends Controller
 
         if ($request->hasFile('logo')) {
             if ($company->logo) {
-                Storage::delete($company->logo);
+                Storage::delete('public/' . $company->logo);
             }
             $data['logo'] = $request->file('logo')->store('company-logos', 'public');
         }
@@ -37,7 +37,9 @@ class CompanyController extends Controller
             foreach ($request->locations as $locationData) {
                 if (isset($locationData['id'])) {
                     $location = CompanyLocation::find($locationData['id']);
-                    $location->update($locationData);
+                    if ($location) {
+                        $location->update($locationData);
+                    }
                 } else {
                     $company->locations()->create($locationData);
                 }

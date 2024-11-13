@@ -14,7 +14,10 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'role'
+        'role',
+        'is_banned',
+        'ban_reason',
+        'banned_at',
     ];
 
     protected $hidden = [
@@ -23,6 +26,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_banned' => 'boolean',
+        'banned_at' => 'datetime',
     ];
 
     public function jobSeeker()
@@ -54,4 +59,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(PasswordReset::class);
     }
+
+    // Thêm relationship với reports (người báo cáo)
+    public function reports()
+    {
+        return $this->hasMany(Report::class, 'reporter_id');
+    }
+
+    // Thêm relationship với report histories (admin xử lý)
+    public function handledReports()
+    {
+        return $this->hasMany(ReportHistory::class, 'admin_id');
+    }
+
 }

@@ -51,4 +51,11 @@ class Job extends Model
     {
         return $this->hasMany(JobApplication::class);
     }
+
+    // Thêm relationship với reports
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reported');
+    }
+
 }

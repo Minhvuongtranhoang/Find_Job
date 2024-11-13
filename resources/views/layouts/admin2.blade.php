@@ -52,13 +52,6 @@
                     <span>Categories</span>
                 </a>
             </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}">
-                    <i class="fas fa-flag"></i>
-                    <span>Reports Management</span>
-                </a>
-
             <li class="nav-item">
                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt"></i>

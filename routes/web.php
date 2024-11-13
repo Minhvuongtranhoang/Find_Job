@@ -10,6 +10,7 @@ use App\Http\Controllers\Recruiter\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Recruiter\JobController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ReportController;
 
 // Login routes
 Route::get('/auth/login', function () {return view('auth.login');})->name('login');
@@ -73,6 +74,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
   // User management routes
   Route::resource('users', UserController::class);
 
+  Route::put('users/{id}/banned', [UserController::class, 'banned'])->name('users.banned');
+
+  Route::put('users/{id}/unbanned', [UserController::class, 'unbanned'])->name('users.unbanned');
   // Job management routes
   Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
   Route::get('/jobs/pending', [AdminJobController::class, 'pending'])->name('jobs.pending');
@@ -84,4 +88,12 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
   // Category management routes
   Route::resource('categories', CategoryController::class);
+
+  //Report management routes
+  Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+  Route::get('/reports/{report}', [ReportController::class, 'show'])->name('reports.show');
+
+  Route::resource('admin/categories', CategoryController::class);
+  Route::post('admin/jobs', [JobController::class, 'store'])->name('admin.jobs.store');
+
 });

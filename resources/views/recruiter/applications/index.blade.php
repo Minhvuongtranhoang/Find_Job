@@ -10,7 +10,7 @@
             <h5 class="card-title mb-0">Job Applications</h5>
             <div class="search-box">
               <i class="fas fa-search"></i>
-              <input type="text" class="form-control" placeholder="Search...">
+              <input type="text" class="form-control" plaiceholder="Search...">
             </div>
           </div>
         </div>

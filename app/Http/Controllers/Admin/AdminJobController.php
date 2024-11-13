@@ -57,12 +57,14 @@ class AdminJobController extends Controller
             'salary' => 'nullable|numeric',
             'deadline' => 'required|date',
             'status' => 'required|string|in:pending,approved,rejected',
-            'is_featured' => 'boolean'
+            'is_featured' => 'boolean',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         Job::create($validatedData);
 
         return redirect()->route('admin.jobs.index')->with('success', 'Job created successfully.');
+
     }
 
     public function destroy($id)

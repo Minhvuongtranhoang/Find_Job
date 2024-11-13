@@ -60,4 +60,25 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
+
+    public function banned($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_banned = true;
+        $user->banned_at = now();
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User banned successfully.');
+    }
+
+    public function unbanned($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_banned = false;
+        $user->banned_at = null;
+        $user->ban_reason = null;
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User unbanned successfully.');
+    }
 }
