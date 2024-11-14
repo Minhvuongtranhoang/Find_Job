@@ -63,19 +63,14 @@ Route::middleware('auth')->group(function () {
   Route::get('/recruiter/applications/{application}', [ApplicationController::class, 'show'])->name('recruiter.applications.show');
   Route::put('/recruiter/applications/{application}/status', [ApplicationController::class, 'updateStatus'])->name('recruiter.applications.update-status');
   Route::get('/recruiter/applications/{application}/download-cv', [ApplicationController::class, 'downloadCV'])->name('recruiter.applications.download-cv');
-  //destroy application
   Route::delete('/recruiter/applications/{application}', [ApplicationController::class, 'destroy'])->name('recruiter.applications.destroy');
 });
 
 // Admin routes
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
   Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-
-  // User management routes
   Route::resource('users', UserController::class);
-
   Route::put('users/{id}/banned', [UserController::class, 'banned'])->name('users.banned');
-
   Route::put('users/{id}/unbanned', [UserController::class, 'unbanned'])->name('users.unbanned');
   // Job management routes
   Route::get('/jobs', [AdminJobController::class, 'index'])->name('jobs.index');
@@ -97,3 +92,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
   Route::post('admin/jobs', [JobController::class, 'store'])->name('admin.jobs.store');
 
 });
+
+  // Job Seeker routes
+  Route::get('/', function () {
+    return view('job-seeker/home');
+  })->name('home');
+

@@ -81,7 +81,7 @@
                     @endforeach
                 </div>
                 <button type="button" id="add-location" class="btn btn-primary mt-2">
-                    Add Location
+                  Add Location
                 </button>
             </div>
 
@@ -97,24 +97,34 @@
 
 @push('scripts')
 <script>
-    document.getElementById('add-location').addEventListener('click', function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded and parsed');
+        const addButton = document.getElementById('add-location');
         const container = document.getElementById('locations-container');
-        const index = container.children.length;
 
-        const template = `
-            <div class="location-item mb-4 p-4 border rounded">
-                <div class="mb-2">
-                    <label class="form-label">Address</label>
-                    <input type="text" name="locations[${index}][address]" class="form-control">
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Google Maps Link</label>
-                    <input type="url" name="locations[${index}][google_maps_link]" class="form-control">
-                </div>
-            </div>
-        `;
+        if (addButton && container) {
+            addButton.addEventListener('click', function() {
+                console.log('Add Location button clicked');
+                const index = container.children.length;
 
-        container.insertAdjacentHTML('beforeend', template);
+                const template = `
+                    <div class="location-item mb-4 p-4 border rounded">
+                        <div class="mb-2">
+                            <label class="form-label">Address</label>
+                            <input type="text" name="locations[${index}][address]" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Google Maps Link</label>
+                            <input type="url" name="locations[${index}][google_maps_link]" class="form-control">
+                        </div>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', template);
+            });
+        } else {
+            console.error('Add Location button or Locations container not found');
+        }
     });
 </script>
 @endpush

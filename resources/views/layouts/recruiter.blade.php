@@ -126,5 +126,6 @@
         card.classList.add('fade-in');
     });
 </script>
+@stack('scripts')
 </body>
 </html>
