@@ -98,3 +98,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     return view('job-seeker/home');
   })->name('home');
 
+
+Route::get('/recruiter/dashboard', function () {
+    return view('recruiter.dashboard');
+})->name('recruiter.dashboard');
+
+
