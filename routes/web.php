@@ -47,6 +47,31 @@ Route::get('/recruiter/dashboard', function () {
     return view('recruiter.dashboard');
 })->name('recruiter.dashboard');
 
-Route::get('/', function () {
-  return view('job_seeker.home');
-})->name('home');
+// Route::get('/job_seeker/home', function () {
+//   return view('job_seeker.home');
+// })->name('job_seeker.home');
+use App\Http\Controllers\JobSeeker\HomeController;
+
+// Route::get('/job_seeker/home', [HomeController::class, 'index'])->name('job_seeker.home');
+// Route::get('/job_seeker/home', [HomeController::class, 'index'])->name('job_seeker.job.show');
+// Route::get('/job_seeker/home', [HomeController::class, 'index'])->name('job_seeker.job.companies.show');
+
+use App\Http\Controllers\JobSeeker\JobController;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/jobs/{id}', [JobController::class, 'show'])->name('job.show');
+Route::post('/jobs/{id}/apply', [JobController::class, 'apply'])->name('job.apply');
+Route::get('jobs/{job}', [JobController::class, 'show'])->name('job.show');
+
+
+// Các route khác...
+
+Route::get('/search', [JobController::class, 'search'])->name('job.search');
+use App\Http\Controllers\JobSeeker\ProfileController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    // Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+Route::post('/jobs/{job}/toggle-save', [JobController::class, 'toggleSave'])->name('job.toggleSave');
+

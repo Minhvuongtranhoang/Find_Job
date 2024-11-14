@@ -601,36 +601,195 @@
     <div class="container">
         <h2 class="mb-4">Việc làm mới nhất</h2>
         <div class="row">
-            @foreach($jobs as $job)
+
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="job-card">
-                    <div class="favorite-icon" data-id="{{ $job->id }}">
-                        <i class="fa {{ $job->isFavoritedByUser ? 'fas' : 'far' }} fa-heart"></i>
+                    <div class="favorite-icon">
+                        <i class="far fa-heart"></i>
                     </div>
-                    <div class="d-flex align-items">
-                        <div class="square-company-logo">
-                            <img src="{{ $job->company->logo }}" alt="Company Logo" class="job-logo">
+                    <div class="d-flex align-items ">
+                      <div class="square-company-logo">
+                        <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                      </div>
+                      <div>
+                        <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                        <p class="nav-link text-muted mb-2">Tech Company A</p>
+                        <div class="nav-link text-muted mb-3">
+                          <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                          <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
                         </div>
-                        <div>
-                            <a class="nav-link" href="{{ route('job.show', $job->id) }}">
-                                <h5>{{ $job->title }}</h5>
-                            </a>
-                            <p class="nav-link text-muted mb-2">{{ $job->company->name }}</p>
-                            <div class="nav-link text-muted mb-3">
-                                <i class="fas fa-map-marker-alt me-2"></i>{{ $job->location->address }}
-                                <i class="fas fa-dollar-sign ms-3 me-2"></i>{{ $job->salary }}
-                            </div>
-                            <button class="btn btn-primary">Ứng tuyển</button>
-                        </div>
+                      </div>
                     </div>
                 </div>
             </div>
-            @endforeach
-        </div>
-    
-    
 
-            
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="job-card">
+                  <div class="favorite-icon">
+                      <i class="far fa-heart"></i>
+                  </div>
+                  <div class="d-flex align-items ">
+                    <div class="square-company-logo">
+                      <img src="https://fptsoftware.com/-/media/project/fpt-software/fso/uplift/logo-fpt.png?modified=20241017090751/50/50" alt="Company Logo" class="job-logo">
+                    </div>
+                    <div>
+                      <a class="nav-link" href="#"><h5 class="">Frontend Developer</h5></a>
+                      <p class="nav-link text-muted mb-2">Tech Company A</p>
+                      <div class="nav-link text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>Hà Nội
+                        <i class="fas fa-dollar-sign ms-3 me-2"></i>15-20 triệu
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
 
             <!-- More job cards... -->
             <div class="col-lg-4 col-md-6 mb-4">

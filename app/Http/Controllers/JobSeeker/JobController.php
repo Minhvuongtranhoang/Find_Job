@@ -30,14 +30,15 @@ class JobController extends Controller
             });
         }
 
-        return view('jobs.search', [
+        return view('job_seeker.job.search', [
             'jobs' => $query->paginate(10)
         ]);
     }
 
     public function show(Job $job)
     {
-        return view('jobs.show', compact('job'));
+        \Log::info($job); // Xem thông tin công việc
+        return view('job_seeker.job.show', compact('job'));
     }
 
     public function toggleSave(Job $job)
@@ -77,4 +78,17 @@ class JobController extends Controller
 
         return redirect()->route('my.applications')->with('success', 'Application submitted successfully');
     }
+    public function store(Request $request, Job $job)
+    {
+        $application = new JobApplication();
+        $application->job_id = $job->id;
+        $application->user_id = auth()->id();
+        $application->cv_file = $request->file('cv')->store('cvs');
+        $application->cover_letter = $request->cover_letter;
+        $application->save();
+    
+        return redirect()->route('job_seeker.job.index')->with('success', 'Ứng tuyển thành công');
+    }
+
+
 }

@@ -1,25 +1,25 @@
 <?php
-// app/Http/Controllers/JobSeeker/HomeController.php
+
 namespace App\Http\Controllers\JobSeeker;
 
 use Illuminate\Http\Request;
 use App\Models\Job;
-use App\Models\Company;
 use App\Models\Category;
-use App\Http\Controllers\Controller;
+use App\Models\Company;
+use Illuminate\Routing\Controller;
+
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $featuredJobs = Job::where('is_featured', true)
-            ->where('status', 'approved')
-            ->limit(5)
-            ->get();
-        $popularCategories = Category::all();
-        $featuredCompanies = Company::limit(5)->get();
-        $jobs = Job::where('status', 'approved')->get(); // Lấy danh sách tất cả công việc
+        $categories = Category::all();
+        $featuredJobs = Job::where('is_featured', 1)->get();
+        $highlightedCategories = Category::whereIn('id', [/* List IDs of featured categories */])->get();
+        $featuredCompanies = Company::take(5)->get();
+        $jobs = Job::latest()->take(6)->get();
+        // $blogs = Blog::latest()->take(3)->get();
 
-        return view('job_seekr.home', compact('featuredJobs', 'popularCategories', 'featuredCompanies', 'jobs'));
+        return view('job_seeker.home', compact('categories', 'featuredJobs', 'highlightedCategories', 'featuredCompanies', 'jobs'));// nhớ thêm blogg vào
     }
 }
