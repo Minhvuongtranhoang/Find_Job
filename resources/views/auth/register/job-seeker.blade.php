@@ -1,5 +1,4 @@
-@extends('job_seeker.layouts.app')
-
+{{-- @extends('layouts.app') --}}
 @section('content')
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
     <div class="col-md-6 col-lg-5">

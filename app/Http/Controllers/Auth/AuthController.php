@@ -54,6 +54,8 @@ class AuthController extends Controller
                 return redirect()->intended('/job-seeker/dashboard');
             } elseif ($user->role === 'recruiter') {
                 return redirect()->intended('/recruiter/dashboard');
+            } elseif ($user->role === 'admin') {
+                return redirect()->intended('/admin/dashboard');
             }
         }
 

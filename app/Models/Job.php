@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
+    use HasFactory;
     protected $fillable = [
         'company_id',
         'location_id',
@@ -49,4 +51,11 @@ class Job extends Model
     {
         return $this->hasMany(JobApplication::class);
     }
+
+    // Thêm relationship với reports
+    public function reports()
+    {
+        return $this->morphMany(Report::class, 'reported');
+    }
+
 }
